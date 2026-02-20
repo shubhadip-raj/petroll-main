@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { UserContext } from "@/contexts/UserContext";
+import { GoogleLogin } from "@react-oauth/google";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -53,11 +54,43 @@ export default function Login() {
       setUser(data.user);
       setToken(data.token);
 
-      navigate("/homeScreen"); // Replace with your main route
+      navigate("/homeScreen");
 
     } catch (error) {
       console.error(error);
       setMessage("Something went wrong. Check network connection.");
+    }
+  };
+
+  // 🔹 Google Login Handler
+  const handleGoogleLogin = async (credentialResponse) => {
+    setMessage("");
+
+    try {
+      const response = await fetch(`${API_URL}/auth/google-login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: credentialResponse.credential,
+        }),
+      });
+
+      if (!response.ok) {
+        const msg = await response.text();
+        setMessage(msg || "Google login failed");
+        return;
+      }
+
+      const data = await response.json();
+
+      setUser(data.user);
+      setToken(data.token);
+
+      navigate("/homeScreen");
+
+    } catch (error) {
+      console.error(error);
+      setMessage("Google authentication failed");
     }
   };
 
@@ -76,7 +109,7 @@ export default function Login() {
             </p>
           </div>
 
-          {/* Form */}
+          {/* Email / Password Form */}
           <div className="space-y-5">
             {/* Email */}
             <div>
@@ -128,10 +161,23 @@ export default function Login() {
             </Button>
           </div>
 
+          {/* OR Divider */}
+          <div className="flex items-center my-4">
+            <div className="flex-grow border-t border-border"></div>
+            <span className="mx-2 text-sm text-muted-foreground">OR</span>
+            <div className="flex-grow border-t border-border"></div>
+          </div>
+
+          {/* 🔹 Google Login Button */}
+          <div className="flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleLogin}
+              onError={() => setMessage("Google login failed")}
+            />
+          </div>
+
           {/* Footer */}
           <p className="mt-6 text-center text-sm text-muted-foreground space-y-2">
-
-            {/* Forgot Password */}
             <span className="block">
               <Link
                 to="/forgotPassword"
@@ -140,8 +186,6 @@ export default function Login() {
                 Forgot Password?
               </Link>
             </span>
-
-            {/* Register */}
             <span className="block">
               Don’t have an account?{" "}
               <Link
@@ -151,7 +195,6 @@ export default function Login() {
                 Create one
               </Link>
             </span>
-
           </p>
 
         </div>

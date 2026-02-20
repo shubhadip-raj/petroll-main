@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
+import { GoogleLogin } from "@react-oauth/google";
+import { UserContext } from "@/contexts/UserContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Register() {
     const navigate = useNavigate();
+    const { setUser, setToken } = useContext(UserContext);
 
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
@@ -24,6 +27,10 @@ export default function Register() {
     const [showOtpModal, setShowOtpModal] = useState(false);
     const [otpError, setOtpError] = useState("");
 
+    const [googleCredToken, setGoogleCredToken] = useState("");
+    const [showGoogleUserTypeModal, setShowGoogleUserTypeModal] = useState(false);
+
+    const [loading, setLoading] = useState(false);
 
     const userTypes = [
         "Owner",
@@ -64,7 +71,6 @@ export default function Register() {
         }
     };
 
-
     const handleVerifyOtp = async () => {
         try {
             const res = await fetch(`${API_URL}/verify-otp`, {
@@ -81,8 +87,8 @@ export default function Register() {
             if (res.ok && data === "Verified") {
                 setIsOtpVerified(true);
                 setShowOtpModal(false);
-                setError(null);
-                setOtpError(null);
+                setError("");
+                setOtpError("");
             } else {
                 setError("Invalid OTP");
                 setOtpError("Invalid OTP");
@@ -91,7 +97,6 @@ export default function Register() {
             setError("OTP verification failed");
         }
     };
-
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -146,8 +151,76 @@ export default function Register() {
         }
     };
 
+    // const handleGoogleSignup = async (credentialResponse) => {
+    //     try {
+    //         const response = await fetch(`${API_URL}/auth/google`, {
+    //             method: "POST",
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify({
+    //                 token: credentialResponse.credential,
+    //             }),
+    //         });
 
+    //         if (!response.ok) {
+    //             setError("Google signup failed");
+    //             return;
+    //         }
 
+    //         const data = await response.json();
+    //         navigate("/homeScreen");
+    //     } catch (err) {
+    //         setError("Google authentication error");
+    //     }
+    // };
+
+    const handleGoogleSignup = (credentialResponse) => {
+        // Save Google token
+        setGoogleCredToken(credentialResponse.credential);
+
+        // Open userType modal
+        setShowGoogleUserTypeModal(true);
+    };
+    const handleGoogleRegisterFinal = async (selectedType: string) => {
+        if (!googleCredToken) {
+            setError("Google token missing");
+            return;
+        }
+
+        setLoading(true);  // start loading
+        setError("");
+
+        try {
+            const response = await fetch(`${API_URL}/auth/google`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: googleCredToken,
+                    userType: selectedType,
+                }),
+            });
+
+            if (!response.ok) {
+                const msg = await response.text();
+                setError(msg || "Google signup failed");
+                setLoading(false);
+                return;
+            }
+
+            const data = await response.json();
+            setShowGoogleUserTypeModal(false);
+
+            setUser(data.user);
+            setToken(data.token);
+
+            setLoading(false);
+            navigate("/homeScreen");  // navigate only after loading finishes
+
+        } catch (err) {
+            console.error(err);
+            setError("Google authentication error");
+            setLoading(false);
+        }
+    };
     return (
         <Layout>
             <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center px-4">
@@ -166,7 +239,6 @@ export default function Register() {
                     {/* Form */}
                     <form onSubmit={handleRegister} className="space-y-5">
 
-                        {/* Username */}
                         <div>
                             <label className="block text-sm font-medium mb-1">
                                 Username
@@ -181,7 +253,6 @@ export default function Register() {
                             />
                         </div>
 
-                        {/* Email */}
                         <div>
                             <label className="block text-sm font-medium mb-1">
                                 Email
@@ -211,8 +282,6 @@ export default function Register() {
                             </p>
                         )}
 
-
-                        {/* Password */}
                         <div>
                             <label className="block text-sm font-medium mb-1">
                                 Password
@@ -236,7 +305,6 @@ export default function Register() {
                             </div>
                         </div>
 
-                        {/* Confirm Password */}
                         <div>
                             <label className="block text-sm font-medium mb-1">
                                 Confirm Password
@@ -262,7 +330,6 @@ export default function Register() {
                             </div>
                         </div>
 
-                        {/* User Type */}
                         <div>
                             <label className="block text-sm font-medium mb-1">
                                 Registration Type
@@ -281,14 +348,12 @@ export default function Register() {
                             </select>
                         </div>
 
-                        {/* Error */}
                         {error && (
                             <p className="text-sm text-red-500 text-center">
                                 {error}
                             </p>
                         )}
 
-                        {/* Submit */}
                         <Button
                             variant="hero"
                             className="w-full h-11 text-base"
@@ -296,7 +361,26 @@ export default function Register() {
                         >
                             Create Account
                         </Button>
+
                     </form>
+
+                    {/* Google Signup */}
+                    <div className="flex justify-center mt-4">
+                        <GoogleLogin
+                            onSuccess={handleGoogleSignup}
+                            onError={() => setError("Google signup failed")}
+                            text="signup_with"
+                        />
+                    </div>
+                    {loading && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-50">
+                            {/* Spinner with subtle border and brand‑colored top */}
+                            <div
+                                className="w-16 h-16 border-4 border-gray-300 border-t-primary rounded-full animate-spin"
+                                role="status"
+                            ></div>
+                        </div>
+                    )}
 
                     {/* Footer */}
                     <p className="mt-6 text-center text-sm text-muted-foreground">
@@ -308,8 +392,10 @@ export default function Register() {
                             Login
                         </Link>
                     </p>
+
                 </div>
             </div>
+
 
             {showOtpModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
@@ -318,7 +404,6 @@ export default function Register() {
                         border border-gray-200 dark:border-gray-700
                         shadow-lg">
 
-                        {/* ❌ Close Button */}
                         <button
                             onClick={() => {
                                 setShowOtpModal(false);
@@ -347,7 +432,7 @@ export default function Register() {
                            placeholder-gray-400 dark:placeholder-gray-300
                            focus:outline-none focus:ring-2 focus:ring-primary"
                         />
-                        {/* Otp Error */}
+
                         {otpError && (
                             <p className="text-sm text-red-500 text-center">
                                 {otpError}
@@ -365,8 +450,37 @@ export default function Register() {
                 </div>
             )}
 
+            {showGoogleUserTypeModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50 p-4">
+                    <div className="relative w-full max-w-sm p-6 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl">
 
+                        <h2 className="text-lg font-semibold text-center text-gray-900 dark:text-gray-100 mb-5">
+                            Select Your User Type
+                        </h2>
 
+                        {userTypes.map((type) => (
+                            <button
+                                key={type}
+                                onClick={() => {
+                                    setShowGoogleUserTypeModal(false);
+                                    handleGoogleRegisterFinal(type);
+                                }}
+                                className="w-full text-center py-2 mb-3 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors"
+                            >
+                                {type}
+                            </button>
+                        ))}
+
+                        <button
+                            onClick={() => setShowGoogleUserTypeModal(false)}
+                            className="w-full text-center py-2 rounded-lg border border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            Cancel
+                        </button>
+
+                    </div>
+                </div>
+            )}
 
         </Layout>
     );

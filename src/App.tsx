@@ -34,51 +34,55 @@ import QRPassPage from "./app/aditionalPages/QRPassPage";
 import PaymentPage from "./app/aditionalPages/PaymentPage";
 import PetApprovalsPage from "./app/aditionalPages/PetApproval";
 import ForgotPassword from "./auth/ForgotPassword";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const queryClient = new QueryClient();
+const googleClientId = '989423256924-fa548v2lgvpt13ad9okbh708m18t0qfi.apps.googleusercontent.com';
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <TooltipProvider>
-        <UserProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/terms" element={<TermsPage />} />
-              <Route path="/safety" element={<SafetyPage />} />
-              <Route path="/child-safety" element={<ChildSafetyPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/pet/view" element={<PetPage />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/forgotPassword" element={<ForgotPassword />} />
-              <Route path="/homeScreen" element={<HomeScreen />} />
-              <Route path="/feed" element={<FeedScreen />} />
-              <Route path="/petManagers" element={<PetManagersPage />} />
-              <Route path="/scanPet" element={<ScanPetPage />} />
-              <Route path="/myPets" element={<MyPetsPage />} />
-              <Route path="/Docs" element={<DocsPage />} />
-              <Route path="/Images" element={<ImagesPage />} />
-              <Route path="/Videos" element={<VideosPage />} />
-              <Route path="/VetFiles" element={<VetFilesPage />} />
-              <Route path="/PetDetails" element={<PetDetails />} />
-              <Route path="/AddFeed" element={<AddFeedPage />} />
-              <Route path="/pet-approvals" element={<PetApprovalsPage />} />
-              <Route path="/account" element={<AccountDetailsPage />} />
-              <Route path="/upgradePremium" element={<UpgradePremiumPage />} />
-              <Route path="/qrPass" element={<QRPassPage />} />
-              <Route path="/payment" element={<PaymentPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </UserProvider>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
+  <GoogleOAuthProvider clientId={googleClientId} >
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <TooltipProvider>
+          <UserProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/terms" element={<TermsPage />} />
+                <Route path="/safety" element={<SafetyPage />} />
+                <Route path="/child-safety" element={<ChildSafetyPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/pet/view" element={<PetPage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/forgotPassword" element={<ForgotPassword />} />
+                <Route path="/homeScreen" element={<HomeScreen />} />
+                <Route path="/feed" element={<FeedScreen />} />
+                <Route path="/petManagers" element={<PetManagersPage />} />
+                <Route path="/scanPet" element={<ScanPetPage />} />
+                <Route path="/myPets" element={<MyPetsPage />} />
+                <Route path="/Docs" element={<DocsPage />} />
+                <Route path="/Images" element={<ImagesPage />} />
+                <Route path="/Videos" element={<VideosPage />} />
+                <Route path="/VetFiles" element={<VetFilesPage />} />
+                <Route path="/PetDetails" element={<PetDetails />} />
+                <Route path="/AddFeed" element={<AddFeedPage />} />
+                <Route path="/pet-approvals" element={<PetApprovalsPage />} />
+                <Route path="/account" element={<AccountDetailsPage />} />
+                <Route path="/upgradePremium" element={<UpgradePremiumPage />} />
+                <Route path="/qrPass" element={<QRPassPage />} />
+                <Route path="/payment" element={<PaymentPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </UserProvider>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  </GoogleOAuthProvider>
 );
 
 export default App;
