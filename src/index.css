@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 30 50% 98%;
+    --foreground: 220 20% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 20%;
+
+    --primary: 16 85% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 174 60% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 30 30% 94%;
+    --muted-foreground: 220 10% 45%;
+
+    --accent: 45 95% 60%;
+    --accent-foreground: 220 20% 20%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 30 20% 88%;
+    --input: 30 20% 88%;
+    --ring: 16 85% 60%;
+
+    --radius: 1rem;
+
+    /* Custom Petroll colors */
+    --coral: 16 85% 60%;
+    --coral-light: 16 85% 75%;
+    --coral-dark: 16 85% 50%;
+    --teal: 174 60% 45%;
+    --teal-light: 174 60% 65%;
+    --teal-dark: 174 60% 35%;
+    --sunshine: 45 95% 60%;
+    --sunshine-light: 45 95% 75%;
+    --lavender: 270 60% 70%;
+    --mint: 160 50% 75%;
+    --cream: 30 50% 98%;
+    --peach: 20 80% 90%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(16 85% 60%) 0%, hsl(45 95% 60%) 50%, hsl(174 60% 45%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(30 30% 97%) 100%);
+    --gradient-cta: linear-gradient(135deg, hsl(16 85% 55%) 0%, hsl(16 85% 65%) 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px hsl(220 20% 20% / 0.06);
+    --shadow-md: 0 8px 24px hsl(220 20% 20% / 0.08);
+    --shadow-lg: 0 16px 48px hsl(220 20% 20% / 0.12);
+    --shadow-glow: 0 0 40px hsl(16 85% 60% / 0.3);
+  }
+
+  .dark {
+    --background: 220 25% 10%;
+    --foreground: 30 20% 95%;
+
+    --card: 220 25% 14%;
+    --card-foreground: 30 20% 95%;
+
+    --popover: 220 25% 14%;
+    --popover-foreground: 30 20% 95%;
+
+    --primary: 16 85% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 174 60% 50%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 20% 20%;
+    --muted-foreground: 220 10% 65%;
+
+    --accent: 45 95% 55%;
+    --accent-foreground: 220 20% 10%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 20%;
+    --input: 220 20% 20%;
+    --ring: 16 85% 60%;
+
+    /* Dark mode custom colors */
+    --coral: 16 85% 60%;
+    --coral-light: 16 75% 70%;
+    --teal: 174 60% 50%;
+    --teal-light: 174 50% 60%;
+    --sunshine: 45 95% 55%;
+    --cream: 220 25% 10%;
+    --peach: 20 40% 20%;
+
+    /* Dark gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(220 25% 12%) 0%, hsl(220 25% 18%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(220 25% 16%) 0%, hsl(220 25% 12%) 100%);
+
+    /* Dark shadows */
+    --shadow-sm: 0 2px 8px hsl(0 0% 0% / 0.2);
+    --shadow-md: 0 8px 24px hsl(0 0% 0% / 0.3);
+    --shadow-lg: 0 16px 48px hsl(0 0% 0% / 0.4);
+    --shadow-glow: 0 0 60px hsl(16 85% 60% / 0.2);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold;
+  }
+}
+
+@layer utilities {
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+
+  .gradient-cta {
+    background: var(--gradient-cta);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, hsl(var(--coral)) 0%, hsl(var(--teal)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce-slow 3s ease-in-out infinite;
+  }
+
+  .animate-wiggle {
+    animation: wiggle 1s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px hsl(var(--coral) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px hsl(var(--coral) / 0.5);
+  }
+}
