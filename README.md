@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Welcome to your Lovable project
 
 ## Project info
@@ -69,3 +70,7 @@ This project is built with:
 
 
 
+=======
+# petroll-main
+Petroll Mail website
+>>>>>>> 178b7688144cf7a6620f27277690e982cf1f176e
