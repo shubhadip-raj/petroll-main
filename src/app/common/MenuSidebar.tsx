@@ -15,11 +15,11 @@ const roles = ["Owner", "Family", "Vet", "Walker", "Groomer", "Friend"];
 
 const menuItems = [
     { label: "Home", path: "/homeScreen" },
-    { label: "QR Pass", path: "/qrPass" },
     { label: "Notifications", path: "/notifications" },
     { label: "Pet Approvals", path: "/pet-approvals" },
     { label: "Shop", path: "/shop" },
     { label: "Account Details", path: "/account" },
+    { label: "History", path: "/payment-history" },
     { label: "Expert Directory", path: "/experts" },
     { label: "Petology", path: "/petology" },
     { label: "TnC", path: "/terms" },
@@ -47,7 +47,12 @@ export default function MenuSidebar({ visible, onClose }: MenuSidebarProps) {
                 const petData = await res.json();
 
                 if (petData?.petId) {
-                    localStorage.setItem("selectedPetId", String(petData.petId));
+                    if (user?.userId && petData?.petId) {
+                        sessionStorage.setItem(
+                            `selectedPetId_${user.userId}`,
+                            String(petData.petId)
+                        );
+                    }
                 }
             }
             setSelectedRole(role);
@@ -84,9 +89,12 @@ export default function MenuSidebar({ visible, onClose }: MenuSidebarProps) {
 
                 const petData = await res.json();
 
-                if (petData?.petId) {
-                    localStorage.setItem("selectedPetId", String(petData.petId));
-                }
+                 if (user?.userId && petData?.petId) {
+                        sessionStorage.setItem(
+                            `selectedPetId_${user.userId}`,
+                            String(petData.petId)
+                        );
+                    }
             }
             // Proceed only if joined
             setSelectedRole(role);
@@ -101,6 +109,8 @@ export default function MenuSidebar({ visible, onClose }: MenuSidebarProps) {
 
 
     const handleLogout = () => {
+        localStorage.clear();
+        sessionStorage.clear();
         logout();
         onClose();
         navigate("/login", { replace: true });
@@ -140,7 +150,7 @@ export default function MenuSidebar({ visible, onClose }: MenuSidebarProps) {
                                 {user?.userName || "Guest"}
                             </h3>
                         </div>
-                    </div>  
+                    </div>
 
                     <button
                         onClick={onClose}

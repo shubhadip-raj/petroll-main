@@ -35,6 +35,7 @@ import PaymentPage from "./app/aditionalPages/PaymentPage";
 import PetApprovalsPage from "./app/aditionalPages/PetApproval";
 import ForgotPassword from "./auth/ForgotPassword";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import PaymentHistory from "./app/aditionalPages/PaymentHistory";
 
 const queryClient = new QueryClient();
 const googleClientId = '989423256924-fa548v2lgvpt13ad9okbh708m18t0qfi.apps.googleusercontent.com';
@@ -75,6 +76,7 @@ const App = () => (
                 <Route path="/upgradePremium" element={<UpgradePremiumPage />} />
                 <Route path="/qrPass" element={<QRPassPage />} />
                 <Route path="/payment" element={<PaymentPage />} />
+                <Route path="/payment-history" element={<PaymentHistory />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

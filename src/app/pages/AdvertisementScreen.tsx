@@ -9,12 +9,14 @@ import petToysImg from "@/app/assets/images/pet-toys.jpg";
 import petWashImg from "@/app/assets/images/pet-wash.jpg";
 import groomingImg from "@/app/assets/images/grooming.jpg";
 import mainAdImage from "@/app/assets/images/advertisement.jpg";
+import { useNavigate } from "react-router-dom";
 
 
 
 
 export default function AdvertisementScreen({ pet }) {
     const { user, token } = useContext(UserContext);
+    const navigate = useNavigate();
     const [mainAd, setMainAd] = useState({ src: mainAdImage, link: "#" });
     const [subAds, setSubAds] = useState([
         { src: vetImg, title: "Vet Services", link: "#" },
@@ -119,7 +121,7 @@ export default function AdvertisementScreen({ pet }) {
             <div className="grid grid-cols-3 gap-4 mb-6">
                 {/* Row 1 */}
                 <button
-                    onClick={() => alert("Navigate to Pet Managers")}
+                    onClick={() =>  navigate("/petManagers")}
                     className="flex flex-col items-center justify-center p-4 rounded-xl shadow hover:scale-105 transition bg-white dark:bg-gray-800"
                 >
                     <IonIcon name="person-circle-outline" className="text-5xl mb-2 text-gray-800 dark:text-gray-100" />

@@ -57,7 +57,10 @@ export default function FeedScreen() {
             try {
                 setLoading(true);
                 if (!user?.userId) return;
-                const storedPetId = localStorage.getItem("selectedPetId");
+                // const storedPetId = localStorage.getItem("selectedPetId");
+                const storedPetId = user?.userId
+                    ? sessionStorage.getItem(`selectedPetId_${user.userId}`)
+                    : null;
 
                 // const res = await fetch(`${API_URL}/getLatestPetByUserId?userId=${user.userId}`);
                 const res = await fetch(
@@ -103,7 +106,7 @@ export default function FeedScreen() {
             setLikes(prev => ({ ...prev, [feedId]: likeData.count }));
             setLikedByMe(prev => ({ ...prev, [feedId]: likeData.likedByMe }));
         } catch {
-            console.log("error loading interactions");
+            console.error("error loading interactions");
         }
     };
 

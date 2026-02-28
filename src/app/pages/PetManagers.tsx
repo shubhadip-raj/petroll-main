@@ -25,7 +25,10 @@ export default function PetManagersPage() {
 
             try {
                 // Load latest pet
-                const storedPetId = localStorage.getItem("selectedPetId");
+                //const storedPetId = localStorage.getItem("selectedPetId");
+                const storedPetId = user?.userId
+                    ? sessionStorage.getItem(`selectedPetId_${user.userId}`)
+                    : null;
 
                 // const res = await fetch(`${API_URL}/getLatestPetByUserId?userId=${user.userId}`);
                 const res = await fetch(

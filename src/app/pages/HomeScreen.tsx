@@ -40,7 +40,10 @@ export default function HomeScreen() {
             setLoading(true);
 
             try {
-                const storedPetId = localStorage.getItem("selectedPetId");
+                // const storedPetId = localStorage.getItem("selectedPetId");
+                const storedPetId = user?.userId
+                    ? sessionStorage.getItem(`selectedPetId_${user.userId}`)
+                    : null;
                 const selectedPetId = state?.petId ?? storedPetId;
 
                 let res: Response;
@@ -57,8 +60,14 @@ export default function HomeScreen() {
                 const petData = await res.json();
                 setPet(petData);
 
-                if (petData?.petId) {
-                    localStorage.setItem("selectedPetId", String(petData.petId));
+                // if (petData?.petId) {
+                //     localStorage.setItem("selectedPetId", String(petData.petId));
+                // }
+                if (user?.userId && petData?.petId) {
+                    sessionStorage.setItem(
+                        `selectedPetId_${user.userId}`,
+                        String(petData.petId)
+                    );
                 }
             } catch (err) {
                 console.error(err);
@@ -68,7 +77,7 @@ export default function HomeScreen() {
         };
 
         loadPet();
-    }, [state, user?.userId,user?.userType]);
+    }, [state, user?.userId, user?.userType]);
 
     // Premium logic
     const today = new Date();
@@ -78,7 +87,7 @@ export default function HomeScreen() {
         new Date(pet.premiumExpiryDate) >= today;
 
 
-    console.log(isPremiumActive); // always true or false
+    // console.log(isPremiumActive); // always true or false
 
 
     // Trial / expired notification

@@ -36,7 +36,10 @@ export default function MyPetsPage() {
 
         fetchPets();
     }, [user]);
-    const storedPetId = Number(localStorage.getItem("selectedPetId"));
+    // const storedPetId = Number(localStorage.getItem("selectedPetId"));
+    const storedPetId = user?.userId
+        ? sessionStorage.getItem(`selectedPetId_${user.userId}`)
+        : null;
 
 
     const onAddPet = () => {
@@ -90,14 +93,20 @@ export default function MyPetsPage() {
                                     key={pet.petId}
                                     onClick={() => {
                                         setSelectedPetId(pet.petId);
-                                        localStorage.setItem("selectedPetId", String(pet.petId));
+                                        // localStorage.setItem("selectedPetId", String(pet.petId));
+                                        if (user?.userId && pet?.petId) {
+                                            sessionStorage.setItem(
+                                                `selectedPetId_${user.userId}`,
+                                                String(pet.petId)
+                                            );
+                                        }
                                         navigate("/homeScreen", {
                                             state: { petId: pet.petId, userId: user.userId }
                                         });
                                     }}
                                     className={`group relative flex items-center gap-4 p-5 rounded-2xl transition-all duration-300
             bg-white dark:bg-gray-800 shadow-md hover:shadow-xl hover:-translate-y-0.5
-            ${storedPetId === pet.petId
+            ${Number(storedPetId) === pet.petId
                                             ? "ring-2 ring-orange-400 bg-orange-50 dark:bg-orange-900/20"
                                             : "hover:bg-gray-50 dark:hover:bg-gray-700"
                                         }`}
@@ -112,14 +121,14 @@ export default function MyPetsPage() {
                                             }
                                             alt={pet.petName}
                                             className={`w-16 h-16 rounded-full object-cover border-2 transition
-                ${storedPetId === pet.petId
+                ${Number(storedPetId) === pet.petId
                                                     ? "border-orange-400"
                                                     : "border-gray-200 dark:border-gray-600 group-hover:border-orange-300"
                                                 }`}
                                         />
 
                                         {/* Selected Indicator */}
-                                        {storedPetId === pet.petId && (
+                                        {Number(storedPetId) === pet.petId && (
                                             <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs shadow">
                                                 ✓
                                             </span>
