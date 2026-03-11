@@ -12,7 +12,8 @@ export default function UpgradePremiumPage() {
     const { pet } = location.state || {};
     const navigate = useNavigate();
 
-    const [days, setDays] = useState("");
+    const days = 90; // Fixed premium duration
+
     const [hasPending, setHasPending] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -57,9 +58,11 @@ export default function UpgradePremiumPage() {
                                 <IonIcon name="star-outline" className="text-orange-500 text-4xl" />
                             </div>
                         </div>
+
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                             Upgrade to Premium ⭐
                         </h1>
+
                         <p className="text-gray-600 dark:text-gray-300 text-sm">
                             Premium for{" "}
                             <span className="font-semibold text-orange-500">
@@ -95,6 +98,21 @@ export default function UpgradePremiumPage() {
                         ))}
                     </div>
 
+                    {/* Plan Info */}
+                    <div className="flex items-center gap-3 p-4 bg-orange-50 dark:bg-orange-900/30 rounded-xl">
+                        <IonIcon
+                            name="calendar-outline"
+                            className="text-orange-500 text-2xl"
+                        />
+                        <p className="text-sm text-gray-800 dark:text-gray-100">
+                            This premium plan provides{" "}
+                            <span className="font-semibold text-orange-500">
+                                90 days
+                            </span>{" "}
+                            of full access to Pet Cloud.
+                        </p>
+                    </div>
+
                     {/* Pending Notice */}
                     {!loading && hasPending && (
                         <div className="flex gap-3 p-4 bg-yellow-100 dark:bg-yellow-900/40 rounded-xl">
@@ -113,38 +131,18 @@ export default function UpgradePremiumPage() {
                     {!loading && !hasPending && (
                         <div className="space-y-4">
 
-                            {/* Days Input */}
-                            <div className="flex flex-col text-left">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Premium Duration (Days)
-                                </label>
-                                <input
-                                    type="number"
-                                    placeholder="Enter number of days"
-                                    value={days}
-                                    onChange={(e) => setDays(e.target.value)}
-                                    className="w-full rounded-xl border px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                                />
-                            </div>
-
                             {/* CTA */}
                             <button
-                                disabled={!days}
                                 onClick={() =>
                                     navigate("/payment", {
                                         state: {
                                             pet,
                                             paymentFor: "petCloud",
-                                            days:days
+                                            days: days
                                         },
                                     })
                                 }
-
-                                className={`w-full font-semibold py-3 rounded-xl transition shadow-lg flex items-center justify-center gap-2
-                                    ${days
-                                        ? "bg-orange-500 hover:bg-orange-600 text-white"
-                                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                    }`}
+                                className="w-full font-semibold py-3 rounded-xl transition shadow-lg flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white"
                             >
                                 <IonIcon name="wallet-outline" className="text-xl" />
                                 Proceed to Payment
@@ -160,6 +158,7 @@ export default function UpgradePremiumPage() {
                         <IonIcon name="arrow-back-outline" />
                         Go Back
                     </button>
+
                 </div>
             </div>
         </Layout>

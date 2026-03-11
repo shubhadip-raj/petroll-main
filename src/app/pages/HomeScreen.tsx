@@ -1,4 +1,4 @@
-// src/pages/HomeScreen.tsx
+// src/pages/home-screen.tsx
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "@/contexts/UserContext";
 import MenuSidebar from "@/app/common/MenuSidebar";
@@ -152,13 +152,26 @@ export default function HomeScreen() {
         navigate(`/${type}`, { state: { pet, user } });
     };
     const handleAddFeed = () => {
+
+        if (!pet) {
+            alert("No Pet Selected\n\nPlease add or select a pet first.");
+            return;
+        }
+
         setModalVisible(false);
-        navigate("/AddFeed", {
+
+        navigate("/add-feed", {
             state: { user, pet }
         });
     };
 
     const handleNotifyOwner = () => {
+
+        if (!pet) {
+            alert("No Pet Selected\n\nPlease add or select a pet first.");
+            return;
+        }
+
         setModalVisible(false);
 
         if (user?.userId === pet?.owner?.userId) {
@@ -168,7 +181,7 @@ export default function HomeScreen() {
             return;
         }
 
-        navigate("/AddFeed", {
+        navigate("/add-feed", {
             state: {
                 user,
                 pet,
@@ -176,7 +189,6 @@ export default function HomeScreen() {
             }
         });
     };
-
     return (
         <Layout>
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -232,7 +244,7 @@ export default function HomeScreen() {
                     {/* Icon Grid */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 text-center">
                         {[
-                            { name: "Feed", icon: "list-outline", action: () => navigate("/feed"), color: "bg-orange-500" },
+                            { name: "Feed", icon: "list-outline", action: handleAddFeed, color: "bg-orange-500" },
                             { name: "Notify", icon: "mail-open-outline", action: () => setModalVisible(true), color: "bg-orange-500" },
                             { name: "Petroll Pass", icon: "logo-usd", action: () => navigate("/qrPass"), color: "bg-lime-500" },
                             { name: "Calendar", icon: "timer-outline", action: () => alert("Calendar"), color: "bg-orange-500" },
@@ -354,7 +366,21 @@ export default function HomeScreen() {
                                 Premium Required
                             </h2>
 
-                            {pet?.owner?.userId === user?.userId ? (
+                            {!pet ? (
+                                // NO PET SELECTED
+                                <>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                                        No pet added or selected. Please add or select a pet to use this feature.
+                                    </p>
+
+                                    <button
+                                        onClick={onAddPet}
+                                        className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-xl transition"
+                                    >
+                                        Add / Select Pet
+                                    </button>
+                                </>
+                            ) : pet?.owner?.userId === user?.userId ? (
                                 // OWNER VIEW
                                 <>
                                     <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -363,7 +389,7 @@ export default function HomeScreen() {
                                     </p>
 
                                     <button
-                                        onClick={() => navigate("/upgradePremium", { state: { pet } })}
+                                        onClick={() => navigate("/upgrade-premium", { state: { pet } })}
                                         className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-xl transition"
                                     >
                                         Upgrade to Premium
@@ -373,20 +399,22 @@ export default function HomeScreen() {
                                 // NON-OWNER VIEW
                                 <>
                                     <p className="text-sm text-gray-600 dark:text-gray-300">
-                                        The pet <span className="font-semibold">{pet.petName}</span> does not
+                                        The pet <span className="font-semibold">{pet?.petName}</span> does not
                                         have Pet Cloud access.
                                         <br />
                                         Please notify the owner to upgrade their plan.
                                     </p>
 
                                     <button
-                                        onClick={() => navigate("/AddFeed", {
-                                            state: {
-                                                user,
-                                                pet,
-                                                notifyOwner: true
-                                            }
-                                        })}
+                                        onClick={() =>
+                                            navigate("/add-feed", {
+                                                state: {
+                                                    user,
+                                                    pet,
+                                                    notifyOwner: true,
+                                                },
+                                            })
+                                        }
                                         className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-xl transition"
                                     >
                                         Notify Owner

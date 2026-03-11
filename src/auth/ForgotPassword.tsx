@@ -101,14 +101,12 @@ export default function ForgotPassword() {
         }
 
         try {
-            const res = await fetch(`${API_URL}/forgot-password`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    userEmail:email,
-                    newPassword,
-                }),
-            });
+            const res = await fetch(
+                `${API_URL}/forgot-password?userEmail=${encodeURIComponent(email)}&newPassword=${encodeURIComponent(newPassword)}`,
+                {
+                    method: "POST"
+                }
+            );
 
             if (res.ok) {
                 setSuccess("Password reset successfully. Please login.");
@@ -154,15 +152,22 @@ export default function ForgotPassword() {
                                 className="w-full h-11 rounded-xl border border-border bg-background px-4
                                 focus:outline-none focus:ring-2 focus:ring-primary"
                             />
-
-                            <button
-                                type="button"
-                                onClick={handleSendOtp}
-                                className="text-sm text-primary mt-2"
-                            >
-                                Verify Email
-                            </button>
                         </div>
+
+                        <Button
+                            variant="hero"
+                            className="w-full h-11 text-base"
+                            onClick={handleSendOtp}
+                            disabled={isOtpVerified}
+                        >
+                            Verify Email
+                        </Button>
+
+                        {isOtpVerified && (
+                            <p className="text-green-500 text-sm mt-1">
+                                Email Verified ✅
+                            </p>
+                        )}
 
                         {/* New Password */}
                         <div>

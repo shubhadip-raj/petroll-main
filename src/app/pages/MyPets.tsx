@@ -100,7 +100,7 @@ export default function MyPetsPage() {
                                                 String(pet.petId)
                                             );
                                         }
-                                        navigate("/homeScreen", {
+                                        navigate("/home-screen", {
                                             state: { petId: pet.petId, userId: user.userId }
                                         });
                                     }}

@@ -108,11 +108,11 @@ export default function DocsPage() {
 
 
     // 🔥 Delete document
-    const handleDeleteDocument = async (docId: number) => {
+    const handleDeleteDocument = async (id: number) => {
         if (!confirm("Are you sure you want to delete this document?")) return;
 
         try {
-            await fetch(`${API_URL}/docs/delete/${docId}`, {
+            await fetch(`${API_URL}/petCloudFile/delete/${pet.petId}/${id}`, {
                 method: "DELETE",
             });
             fetchDocuments();
@@ -160,12 +160,12 @@ export default function DocsPage() {
                         <div className="space-y-4">
                             {docList.map((doc, index) => (
                                 <div
-                                    key={doc.docId || index}
+                                    key={doc.id || index}
                                     className="flex justify-between items-center p-4 bg-white dark:bg-gray-800 rounded-xl shadow"
                                 >
                                     <button
                                         onClick={() =>
-                                            handleOpenDocument(doc, `Document_${index + 1}.pdf`)
+                                            handleOpenDocument(doc.doc, `Document_${index + 1}.pdf`)
                                         }
                                         className="flex items-center gap-3 text-left"
                                     >
@@ -179,7 +179,7 @@ export default function DocsPage() {
                                     </button>
 
                                     <button
-                                        onClick={() => handleDeleteDocument(doc.docId)}
+                                        onClick={() => handleDeleteDocument(doc.id)}
                                         className="text-red-500 hover:text-red-600 transition"
                                     >
                                         <IonIcon name="trash-outline" className="text-xl" />

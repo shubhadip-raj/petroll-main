@@ -41,7 +41,7 @@ export default function AccountDetailsPage() {
                 setAddress(data.address || "");
                 setUserType(data.userType || "");
             } catch (err) {
-                console.log("Fetch Error:", err);
+                console.error("Fetch Error:", err);
             }
         };
 
@@ -73,7 +73,7 @@ export default function AccountDetailsPage() {
                 alert("Failed to update user details");
             }
         } catch (error) {
-            console.log("Update error:", error);
+            console.error("Update error:", error);
             alert("Something went wrong");
         }
     };

@@ -23,7 +23,7 @@ export default function VetFilesPage() {
         try {
             const response = await fetch(`${API_URL}/vetfiles/${pet.petId}`);
             const data = await response.json();
-            setVetFiles(data.filter((file: string) => file && file.trim() !== ""));
+            setVetFiles(data);
         } catch (error) {
             console.error("Error fetching vet files:", error);
         } finally {
@@ -92,11 +92,11 @@ export default function VetFilesPage() {
     };
 
     // 🔥 Delete vet file
-    const handleDeleteVetFile = async (fileId: number) => {
+    const handleDeleteVetFile = async (id: number) => {
         if (!confirm("Are you sure you want to delete this vet file?")) return;
 
         try {
-            await fetch(`${API_URL}/vetfiles/delete/${pet.petId}/${fileId}`, {
+            await fetch(`${API_URL}/petCloudFile/delete/${pet.petId}/${id}`, {
                 method: "DELETE",
             });
             fetchVetFiles();
@@ -155,7 +155,7 @@ export default function VetFilesPage() {
                                 >
                                     <button
                                         onClick={() =>
-                                            handleOpenVetFile(file, `VetFile_${index + 1}.pdf`)
+                                            handleOpenVetFile(file.vetFile, `VetFile_${index + 1}.pdf`)
                                         }
                                         className="flex items-center gap-3"
                                     >
@@ -169,7 +169,7 @@ export default function VetFilesPage() {
                                     </button>
 
                                     <button
-                                        onClick={() => handleDeleteVetFile(file.id || index)}
+                                        onClick={() => handleDeleteVetFile(file.id)}
                                         className="text-red-500 hover:text-red-600 transition"
                                     >
                                         <IonIcon name="trash-outline" className="text-xl" />

@@ -167,7 +167,7 @@ export default function Register() {
     //         }
 
     //         const data = await response.json();
-    //         navigate("/homeScreen");
+    //         navigate("/home-screen");
     //     } catch (err) {
     //         setError("Google authentication error");
     //     }
@@ -213,7 +213,7 @@ export default function Register() {
             setToken(data.token);
 
             setLoading(false);
-            navigate("/homeScreen");  // navigate only after loading finishes
+            navigate("/home-screen");  // navigate only after loading finishes
 
         } catch (err) {
             console.error(err);

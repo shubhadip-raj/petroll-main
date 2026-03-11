@@ -54,7 +54,7 @@ export default function Login() {
       setUser(data.user);
       setToken(data.token);
 
-      navigate("/homeScreen");
+      navigate("/home-screen");
 
     } catch (error) {
       console.error(error);
@@ -80,13 +80,13 @@ export default function Login() {
         setMessage(msg || "Google login failed");
         return;
       }
-
       const data = await response.json();
+
 
       setUser(data.user);
       setToken(data.token);
 
-      navigate("/homeScreen");
+      navigate("/home-screen");
 
     } catch (error) {
       console.error(error);
@@ -180,7 +180,7 @@ export default function Login() {
           <p className="mt-6 text-center text-sm text-muted-foreground space-y-2">
             <span className="block">
               <Link
-                to="/forgotPassword"
+                to="/forgot-password"
                 className="font-medium text-primary hover:underline"
               >
                 Forgot Password?

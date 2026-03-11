@@ -14,7 +14,7 @@ interface MenuSidebarProps {
 const roles = ["Owner", "Family", "Vet", "Walker", "Groomer", "Friend"];
 
 const menuItems = [
-    { label: "Home", path: "/homeScreen" },
+    { label: "Home", path: "/home-screen" },
     { label: "Notifications", path: "/notifications" },
     { label: "Pet Approvals", path: "/pet-approvals" },
     { label: "Shop", path: "/shop" },
@@ -89,12 +89,12 @@ export default function MenuSidebar({ visible, onClose }: MenuSidebarProps) {
 
                 const petData = await res.json();
 
-                 if (user?.userId && petData?.petId) {
-                        sessionStorage.setItem(
-                            `selectedPetId_${user.userId}`,
-                            String(petData.petId)
-                        );
-                    }
+                if (user?.userId && petData?.petId) {
+                    sessionStorage.setItem(
+                        `selectedPetId_${user.userId}`,
+                        String(petData.petId)
+                    );
+                }
             }
             // Proceed only if joined
             setSelectedRole(role);

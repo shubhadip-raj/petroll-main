@@ -9,9 +9,9 @@ import { UserContext } from "@/contexts/UserContext";
 import MenuSidebar from "@/app/common/MenuSidebar";
 
 const navLinks = [
-  { name: "Home", path: "/homeScreen", subPaths: ["/pet-approvals", "/account", "/upgradePremium" ,"/Docs", "/Images", "/Videos", "/VetFiles","/payment"] },
-  { name: "Feed", path: "/feed", subPaths: ["/AddFeed", "/feedDetails"] },
-  { name: "Pet Managers", path: "/petManagers" },
+  { name: "Home", path: "/home-screen", subPaths: ["/pet-approvals", "/account", "/upgrade-premium" ,"/Docs", "/Images", "/Videos", "/VetFiles","/payment"] },
+  { name: "Feed", path: "/feed", subPaths: ["/add-feed", "/feedDetails"] },
+  { name: "Pet Managers", path: "/pet-managers" },
   { name: "Pet Scanner", path: "/scanPet" },
   { name: "My Pets", path: "/myPets", subPaths: ["/PetDetails", "/myPets/edit", "/qrPass"] },
 ];

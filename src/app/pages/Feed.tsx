@@ -241,7 +241,7 @@ export default function FeedScreen() {
                     </div>
 
                     <button
-                        onClick={() => pet && navigate("/AddFeed", { state: { pet, user, notifyOwner: false } })}
+                        onClick={() => pet && navigate("/add-feed", { state: { pet, user, notifyOwner: false } })}
                         className="text-orange-500 text-2xl hover:text-orange-600 transition"
                     >
                         <IonIcon name="add-circle-outline" />

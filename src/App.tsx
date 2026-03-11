@@ -59,10 +59,10 @@ const App = () => (
                 <Route path="/pet/view" element={<PetPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/forgotPassword" element={<ForgotPassword />} />
-                <Route path="/homeScreen" element={<HomeScreen />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/home-screen" element={<HomeScreen />} />
                 <Route path="/feed" element={<FeedScreen />} />
-                <Route path="/petManagers" element={<PetManagersPage />} />
+                <Route path="/pet-managers" element={<PetManagersPage />} />
                 <Route path="/scanPet" element={<ScanPetPage />} />
                 <Route path="/myPets" element={<MyPetsPage />} />
                 <Route path="/Docs" element={<DocsPage />} />
@@ -70,10 +70,10 @@ const App = () => (
                 <Route path="/Videos" element={<VideosPage />} />
                 <Route path="/VetFiles" element={<VetFilesPage />} />
                 <Route path="/PetDetails" element={<PetDetails />} />
-                <Route path="/AddFeed" element={<AddFeedPage />} />
+                <Route path="/add-feed" element={<AddFeedPage />} />
                 <Route path="/pet-approvals" element={<PetApprovalsPage />} />
                 <Route path="/account" element={<AccountDetailsPage />} />
-                <Route path="/upgradePremium" element={<UpgradePremiumPage />} />
+                <Route path="/upgrade-premium" element={<UpgradePremiumPage />} />
                 <Route path="/qrPass" element={<QRPassPage />} />
                 <Route path="/payment" element={<PaymentPage />} />
                 <Route path="/payment-history" element={<PaymentHistory />} />

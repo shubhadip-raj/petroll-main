@@ -98,7 +98,7 @@ export default function PaymentPage() {
             }
 
 
-            navigate("/homeScreen");
+            navigate("/home-screen");
         } catch (err) {
             alert("Something went wrong. Please try again.");
         } finally {

@@ -12,18 +12,22 @@ export default function ImagesPage() {
 
     const { pet, user } = location.state || {};
 
-    const [imageList, setImageList] = useState<string[]>([]);
+    const [imageList, setImageList] = useState([]);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-    // 🔥 Fetch images
     const fetchImages = useCallback(async () => {
         if (!pet?.petId) return;
 
         try {
             const resp = await fetch(`${API_URL}/images/${pet.petId}`);
             const data = await resp.json();
-            const cleanImages = data.filter((img: string) => img && img !== "null");
+
+            const cleanImages = data.filter(
+                (img) => img.image && img.image !== "null"
+            );
+
             setImageList(cleanImages);
+
         } catch (err) {
             console.error("Error fetching images:", err);
         }
@@ -70,11 +74,12 @@ export default function ImagesPage() {
     };
 
     // 🔥 Delete image
-    const handleDeleteImage = async (index: number) => {
+    const handleDeleteImage = async (id: number) => {
         if (!confirm("Are you sure you want to delete this image?")) return;
+        console.log(typeof (id))
 
         try {
-            await fetch(`${API_URL}/images/delete/${pet.petId}/${index}`, {
+            await fetch(`${API_URL}/petCloudFile/delete/${pet.petId}/${id}`, {
                 method: "DELETE",
             });
             fetchImages();
@@ -126,7 +131,7 @@ export default function ImagesPage() {
                                     {/* Preview */}
                                     <button
                                         onClick={() =>
-                                            setPreviewImage(`data:image/jpeg;base64,${img}`)
+                                            setPreviewImage(`data:image/jpeg;base64,${img.image}`)
                                         }
                                         className="flex items-center gap-3"
                                     >
@@ -141,7 +146,7 @@ export default function ImagesPage() {
 
                                     {/* Delete */}
                                     <button
-                                        onClick={() => handleDeleteImage(index)}
+                                        onClick={() => handleDeleteImage(img.id)}
                                         className="text-red-500 hover:text-red-600 transition"
                                     >
                                         <IonIcon name="trash-outline" className="text-xl" />

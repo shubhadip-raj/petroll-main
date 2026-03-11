@@ -121,7 +121,7 @@ export default function AdvertisementScreen({ pet }) {
             <div className="grid grid-cols-3 gap-4 mb-6">
                 {/* Row 1 */}
                 <button
-                    onClick={() =>  navigate("/petManagers")}
+                    onClick={() =>  navigate("/pet-managers")}
                     className="flex flex-col items-center justify-center p-4 rounded-xl shadow hover:scale-105 transition bg-white dark:bg-gray-800"
                 >
                     <IonIcon name="person-circle-outline" className="text-5xl mb-2 text-gray-800 dark:text-gray-100" />

@@ -136,7 +136,7 @@ export default function PetDetails() {
 const handleCancel = () => {
   // example conditions
   if (petId) {
-    navigate("/homeScreen");
+    navigate("/home-screen");
   } else {
     navigate("/qrPass"); // fallback
   }

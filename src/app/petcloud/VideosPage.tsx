@@ -70,11 +70,11 @@ export default function VideosPage() {
     };
 
     // 🔥 Delete video
-    const handleDeleteVideo = async (videoId: number) => {
+    const handleDeleteVideo = async (id: number) => {
         if (!confirm("Are you sure you want to delete this video?")) return;
 
         try {
-            await fetch(`${API_URL}/videos/delete/${pet.petId}/${videoId}`, {
+            await fetch(`${API_URL}/petCloudFile/delete/${pet.petId}/${id}`, {
                 method: "DELETE",
             });
             fetchVideos();
