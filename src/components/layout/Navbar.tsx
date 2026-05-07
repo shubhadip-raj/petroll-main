@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon, PawPrint } from "lucide-react";
+import { Menu, X, Sun, Moon, PawPrint, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
+import { triggerInstall } from "@/pwaInstallts";
+
+
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -62,6 +65,17 @@ export function Navbar() {
                   )}
                 </Link>
               ))}
+              {/* <button
+                onClick={triggerInstall}
+
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium 
+             bg-primary text-white rounded-lg shadow-sm
+             hover:bg-primary/90 transition-all duration-200
+             disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Download className="w-4 h-4" />
+                App
+              </button> */}
             </div>
 
             {/* Actions */}
@@ -94,6 +108,16 @@ export function Navbar() {
                     </motion.div>
                   )}
                 </AnimatePresence>
+              </Button>
+              <Button
+                onClick={triggerInstall}
+
+                variant="ghost"
+                size="icon"
+              // className="md:hidden"
+
+              >
+                <Download className="w-4 h-4" />
               </Button>
 
               {/* Join Now (Desktop) */}
@@ -175,7 +199,7 @@ export function Navbar() {
         </div>
       </nav>
 
-     
+
       {/* Auth Modal */}
       <AnimatePresence>
         {showAuthModal && (

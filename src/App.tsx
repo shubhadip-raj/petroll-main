@@ -36,6 +36,11 @@ import PetApprovalsPage from "./app/aditionalPages/PetApproval";
 import ForgotPassword from "./auth/ForgotPassword";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import PaymentHistory from "./app/aditionalPages/PaymentHistory";
+import PWAInstall from "./PWAInstall";
+import HowItWorksPage from "./pages/HowItWorksPage";
+import ReportAbusePage from "./pages/ReportAbusePage";
+import DeleteAccountPage from "./pages/DeleteAccountPage";
+import PetRedirect from "./pages/PetRedirect";
 
 const queryClient = new QueryClient();
 const googleClientId = '989423256924-fa548v2lgvpt13ad9okbh708m18t0qfi.apps.googleusercontent.com';
@@ -48,15 +53,20 @@ const App = () => (
           <UserProvider>
             <Toaster />
             <Sonner />
+            <PWAInstall />
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/about" element={<AboutPage />} />
+                {/* <Route path="/about" element={<AboutPage />} />
                 <Route path="/terms" element={<TermsPage />} />
                 <Route path="/safety" element={<SafetyPage />} />
                 <Route path="/child-safety" element={<ChildSafetyPage />} />
-                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/how-it-works" element={<HowItWorksPage />} />
+                <Route path="/report-abuse" element={<ReportAbusePage />} /> */}
+                <Route path="/delete-my-account" element={<DeleteAccountPage />} />
+                {/* <Route path="/contact" element={<ContactPage />} /> */}
                 <Route path="/pet/view" element={<PetPage />} />
+                <Route path="/pet/:id" element={<PetRedirect />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -85,6 +95,10 @@ const App = () => (
       </ThemeProvider>
     </QueryClientProvider>
   </GoogleOAuthProvider>
+
+
 );
+
+
 
 export default App;

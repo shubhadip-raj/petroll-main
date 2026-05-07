@@ -110,6 +110,47 @@ export default function PetDetails() {
       return;
     }
 
+    const requiredFields = [
+      "petName",
+      "color",
+      "breed",
+      "species",
+      "microChipId",
+      "emergencyContact",
+      "emergencyEmail",
+      "dob",
+      "description",
+    ];
+
+    // 🔍 Check empty fields
+    const missingField = requiredFields.find(
+      (field) => !pet[field as keyof Pet]?.toString().trim()
+    );
+
+    if (missingField) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    // 🔍 Validate gender
+    if (!pet.gender || pet.gender === "UNKNOWN") {
+      alert("Please select gender");
+      return;
+    }
+
+    // 🔍 Validate neuter
+    if (!pet.spayedNeutered || pet.spayedNeutered === "UNKNOWN") {
+      alert("Please select neutered status");
+      return;
+    }
+
+    // 🔍 Validate email
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(pet.emergencyEmail);
+    if (!emailValid) {
+      alert("Enter a valid email");
+      return;
+    }
+
     const endpoint = petId
       ? `${API_URL}/updatePet/${petId}`
       : `${API_URL}/addPet`;
@@ -133,14 +174,14 @@ export default function PetDetails() {
   if (loading) {
     return <div className="p-10 text-center text-gray-700 dark:text-gray-200">Loading...</div>;
   }
-const handleCancel = () => {
-  // example conditions
-  if (petId) {
-    navigate("/home-screen");
-  } else {
-    navigate("/qrPass"); // fallback
-  }
-};
+  const handleCancel = () => {
+    // example conditions
+    if (petId) {
+      navigate("/home-screen");
+    } else {
+      navigate("/qrPass"); // fallback
+    }
+  };
 
   return (
     <Layout>
@@ -182,36 +223,45 @@ const handleCancel = () => {
             ["Email", "emergencyEmail"],
           ].map(([label, key]) => (
             <div key={key} className="grid grid-cols-2 gap-4 items-center">
-              <span className="text-gray-700 dark:text-gray-300 font-medium">{label}</span>
+
+              {/* ✅ Label with * */}
+              <span className="text-gray-700 dark:text-gray-300 font-medium">
+                {label} <span className="text-red-500">*</span>
+              </span>
+
               <input
                 className="
-                px-3 py-2 rounded-lg
-                bg-white dark:bg-gray-700
-                text-gray-900 dark:text-gray-100
-                placeholder-gray-400 dark:placeholder-gray-400
-                border border-gray-300 dark:border-gray-600
-                focus:outline-none focus:ring-2 focus:ring-orange-500
-              "
-                value={(pet)[key]}
+        px-3 py-2 rounded-lg
+        bg-white dark:bg-gray-700
+        text-gray-900 dark:text-gray-100
+        placeholder-gray-400 dark:placeholder-gray-400
+        border border-gray-300 dark:border-gray-600
+        focus:outline-none focus:ring-2 focus:ring-orange-500
+      "
+                value={(pet)[key] || ""}
                 onChange={(e) => setPet({ ...pet, [key]: e.target.value })}
+                required
               />
             </div>
           ))}
 
           {/* DOB */}
           <div className="grid grid-cols-2 gap-4 items-center">
-            <span className="text-gray-700 dark:text-gray-300 font-medium">Birth Date</span>
+            <span className="text-gray-700 dark:text-gray-300 font-medium">
+              Birth Date <span className="text-red-500">*</span>
+            </span>
             <input
               type="date"
               className="
-              px-3 py-2 rounded-lg
-              bg-white dark:bg-gray-700
-              text-gray-900 dark:text-gray-100
-              border border-gray-300 dark:border-gray-600
-              focus:outline-none focus:ring-2 focus:ring-orange-500
-            "
+      px-3 py-2 rounded-lg
+      bg-white dark:bg-gray-700
+      text-gray-900 dark:text-gray-100
+      border border-gray-300 dark:border-gray-600
+      focus:outline-none focus:ring-2 focus:ring-orange-500
+    "
               value={pet.dob}
               onChange={(e) => setPet({ ...pet, dob: e.target.value })}
+              required
             />
           </div>
 
@@ -220,7 +270,9 @@ const handleCancel = () => {
             className="grid grid-cols-2 gap-4 items-center cursor-pointer"
             onClick={() => setShowGender(true)}
           >
-            <span className="text-gray-700 dark:text-gray-300 font-medium">Gender</span>
+            <span className="text-gray-700 dark:text-gray-300 font-medium">
+              Gender <span className="text-red-500">*</span>
+            </span>
             <span className="text-gray-900 dark:text-gray-100">{pet.gender}</span>
           </div>
 
@@ -229,13 +281,19 @@ const handleCancel = () => {
             className="grid grid-cols-2 gap-4 items-center cursor-pointer"
             onClick={() => setShowNeuter(true)}
           >
-            <span className="text-gray-700 dark:text-gray-300 font-medium">Neutered</span>
-            <span className="text-gray-900 dark:text-gray-100">{pet.spayedNeutered}</span>
+            <span className="text-gray-700 dark:text-gray-300 font-medium">
+              Neutered <span className="text-red-500">*</span>
+            </span>
+            <span className="text-gray-900 dark:text-gray-100">
+              {pet.spayedNeutered}
+            </span>
           </div>
 
           {/* LOST */}
           <div className="grid grid-cols-2 gap-4 items-center">
-            <span className="text-gray-700 dark:text-gray-300 font-medium">At Home</span>
+            <span className="text-gray-700 dark:text-gray-300 font-medium">
+              At Home <span className="text-red-500">*</span>
+            </span>
             <input
               type="checkbox"
               className="w-5 h-5 accent-orange-500 cursor-pointer"
@@ -249,18 +307,24 @@ const handleCancel = () => {
           </div>
 
           {/* DESCRIPTION */}
-          <textarea
-            className="
-            w-full p-3 rounded-lg
-            bg-white dark:bg-gray-700
-            text-gray-900 dark:text-gray-100
-            border border-gray-300 dark:border-gray-600
-            focus:outline-none focus:ring-2 focus:ring-orange-500
-          "
-            placeholder="Description"
-            value={pet.description}
-            onChange={(e) => setPet({ ...pet, description: e.target.value })}
-          />
+          <div>
+            <span className="text-gray-700 dark:text-gray-300 font-medium">
+              Description <span className="text-red-500">*</span>
+            </span>
+            <textarea
+              required
+              className="
+      w-full p-3 rounded-lg mt-1
+      bg-white dark:bg-gray-700
+      text-gray-900 dark:text-gray-100
+      border border-gray-300 dark:border-gray-600
+      focus:outline-none focus:ring-2 focus:ring-orange-500
+    "
+              placeholder="Description"
+              value={pet.description || ""}
+              onChange={(e) => setPet({ ...pet, description: e.target.value })}
+            />
+          </div>
         </div>
 
         {/* BUTTONS */}

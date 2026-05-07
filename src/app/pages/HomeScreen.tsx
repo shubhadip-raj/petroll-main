@@ -161,7 +161,7 @@ export default function HomeScreen() {
         setModalVisible(false);
 
         navigate("/add-feed", {
-            state: { user, pet }
+            state: { user, pet, notifyOwner: false }
         });
     };
 
@@ -389,7 +389,8 @@ export default function HomeScreen() {
                                     </p>
 
                                     <button
-                                        onClick={() => navigate("/upgrade-premium", { state: { pet } })}
+                                        // onClick={() => navigate("/upgrade-premium", { state: { pet } })}  /qrPass
+                                        onClick={() => navigate("/qrPass")}
                                         className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-xl transition"
                                     >
                                         Upgrade to Premium

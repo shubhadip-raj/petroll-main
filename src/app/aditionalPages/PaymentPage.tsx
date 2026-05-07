@@ -10,7 +10,7 @@ export default function PaymentPage() {
     const navigate = useNavigate();
     const { user, token } = useContext(UserContext);
     const location = useLocation();
-    const { pet, paymentFor, days } = location.state || {};
+    const { pet, paymentFor, days, plan } = location.state || {};
 
     const [activeTab, setActiveTab] = useState("india");
     const [transactionId, setTransactionId] = useState("");
@@ -21,6 +21,16 @@ export default function PaymentPage() {
             <Layout>
                 <div className="min-h-screen flex items-center justify-center">
                     <p className="text-gray-600">No pet selected.</p>
+                </div>
+            </Layout>
+        );
+    }
+
+    if (!plan) {
+        return (
+            <Layout>
+                <div className="min-h-screen flex items-center justify-center">
+                    <p className="text-gray-600">No plan selected.</p>
                 </div>
             </Layout>
         );
@@ -43,20 +53,20 @@ export default function PaymentPage() {
     const paymentText = paymentConfig[paymentFor] || paymentConfig.qrPass;
 
     /* 💰 Amounts */
-    const INR_AMOUNT = 999;
+    const INR_AMOUNT = plan?.discountPrice
+        ? Number(plan.discountPrice.toString().replace(/,/g, ""))
+        : 0;
     const USD_RATE = 0.012;
     const USD_AMOUNT = (INR_AMOUNT * USD_RATE).toFixed(2);
 
     const paymentDetails = {
         india: {
             qr: "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=INDIA_PAYMENT",
-            number: "+91 98765 43210",
             amount: `₹${INR_AMOUNT}`,
             label: "INR",
         },
         usa: {
             qr: "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=USA_PAYMENT",
-            number: "+1 555 123 4567",
             amount: `$${USD_AMOUNT}`,
             label: "USD",
         },
@@ -75,10 +85,10 @@ export default function PaymentPage() {
             petId: pet.petId,
             petName: pet.petName,
             transactionId,
-            paymentAmount: currentPayment.amount,
+            paymentAmount: INR_AMOUNT, // sending numeric value
             paymentCurrency: currentPayment.label,
             country: activeTab,
-            paymentFor,
+            planType: plan.pricingPlan,
         };
 
         setLoading(true);
@@ -93,10 +103,10 @@ export default function PaymentPage() {
             if (!res.ok) throw new Error("Payment failed");
 
             alert("Payment submitted successfully ✅");
-            if (res.ok && paymentFor === "petCloud") {
+
+            if (plan.pricingPlan.toLowerCase() !== "bronze") {
                 handleRequestPremium();
             }
-
 
             navigate("/home-screen");
         } catch (err) {
@@ -105,6 +115,7 @@ export default function PaymentPage() {
             setLoading(false);
         }
     };
+
     /* 📤 Send premium request */
     const handleRequestPremium = async () => {
         if (!days) {
@@ -114,7 +125,7 @@ export default function PaymentPage() {
 
         try {
             const response = await fetch(
-                `${API_URL}/premium/request/${pet.petId}/${Number(days)}`,
+                `${API_URL}/premium/request/${pet.petId}/${Number(365)}`,
                 {
                     method: "POST",
                     headers: {
@@ -125,13 +136,12 @@ export default function PaymentPage() {
 
             if (!response.ok) throw new Error("Failed to send request");
 
-            alert(
-                "Your premium request has been sent to admin."
-            );
+            alert("Your premium request has been sent to admin.");
         } catch (error) {
             alert(error.message);
         }
     };
+
     return (
         <Layout>
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
@@ -150,9 +160,9 @@ export default function PaymentPage() {
                         </h1>
 
                         <p className="text-gray-600 dark:text-gray-300 text-sm">
-                            {paymentText.description}{" "}
+                            You are making a payment for{" "}
                             <span className="font-semibold text-orange-500">
-                                {paymentText.highlight}
+                                {plan.pricingPlan} Plan
                             </span>{" "}
                             for{" "}
                             <span className="font-semibold text-orange-500">
@@ -163,7 +173,7 @@ export default function PaymentPage() {
                         {/* Highlight Badge */}
                         <div className="flex justify-center">
                             <span className="bg-orange-100 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400 px-3 py-1 rounded-full text-xs font-semibold">
-                                {paymentText.highlight}
+                                {plan.pricingPlan} Plan
                             </span>
                         </div>
                     </div>
@@ -190,15 +200,12 @@ export default function PaymentPage() {
                         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                             Pay for{" "}
                             <span className="text-orange-500 font-semibold">
-                                {paymentText.highlight}
+                                {plan.pricingPlan} Plan
                             </span>
                         </h2>
 
                         <p className="text-sm text-gray-600 dark:text-gray-300">
-                            Please pay the exact amount to activate{" "}
-                            <span className="text-orange-500 font-semibold">
-                                {paymentText.highlight}
-                            </span>
+                            Please pay the exact amount to activate your plan
                         </p>
 
                         <div className="bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-400/20 rounded-xl py-3">
@@ -220,23 +227,13 @@ export default function PaymentPage() {
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3 text-gray-400 text-sm">
-                            <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600" />
-                            OR
-                            <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600" />
-                        </div>
-
-                        <div>
-                            <p className="text-sm text-gray-600 dark:text-gray-300">
-                                Send payment to this number
-                            </p>
-                            <div className="flex justify-center items-center gap-2">
-                                <IonIcon name="call-outline" className="text-orange-500" />
-                                <span className="font-bold text-gray-900 dark:text-gray-100">
-                                    {currentPayment.number}
+                        {plan && (
+                            <div className="flex justify-center">
+                                <span className="bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 px-3 py-1 rounded-full text-xs font-semibold">
+                                    {plan.pricingPlan} Plan Selected
                                 </span>
                             </div>
-                        </div>
+                        )}
                     </div>
 
                     {/* Payment Form */}
@@ -245,12 +242,7 @@ export default function PaymentPage() {
                             Payment Details
                         </h3>
 
-                        {[
-                            ["Name", user?.userName],
-                            ["Email", user?.userEmail],
-                            ["Pet Name", pet.petName],
-                            ["Pet ID", pet.petId],
-                        ].map(([label, value]) => (
+                        {[["Name", user?.userName], ["Email", user?.userEmail], ["Pet Name", pet.petName], ["Pet ID", pet.petId]].map(([label, value]) => (
                             <div key={label} className="flex flex-col text-left">
                                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                     {label}
@@ -283,22 +275,18 @@ export default function PaymentPage() {
                         disabled={!transactionId || loading}
                         onClick={handleSubmit}
                         className={`w-full font-semibold py-3 rounded-xl transition shadow-lg flex items-center justify-center gap-2
-        ${transactionId && !loading
+                        ${transactionId && !loading
                                 ? "bg-orange-500 hover:bg-orange-600 text-white"
                                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
                             }`}
                     >
                         <IonIcon name="checkmark-done-outline" className="text-xl" />
-
-                        {loading ? (
-                            "Submitting..."
-                        ) : (
+                        {loading ? "Submitting..." : (
                             <>
-                                Submit Payment For
+                                Submit Payment For{" "}
                                 <span className="font-bold underline decoration-white/40">
-                                    {paymentFor === "petCloud" ? "Pet Cloud Premium" : "QR Pass"}
+                                    {plan.pricingPlan} Plan
                                 </span>
-
                             </>
                         )}
                     </button>

@@ -21,6 +21,7 @@ const menuItems = [
     { label: "Account Details", path: "/account" },
     { label: "History", path: "/payment-history" },
     { label: "Expert Directory", path: "/experts" },
+      { label: "Delete My Account", path: "/delete-my-account" },
     { label: "Petology", path: "/petology" },
     { label: "TnC", path: "/terms" },
     { label: "About & Contacts", path: "/about" },
