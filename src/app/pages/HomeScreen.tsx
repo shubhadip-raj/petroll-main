@@ -91,22 +91,22 @@ export default function HomeScreen() {
 
 
     // Trial / expired notification
-    useEffect(() => {
-        if (user?.createdAt) {
-            const createdDate = new Date(user.createdAt);
-            const diffDays = Math.floor((today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
-            if (diffDays < 90) {
-                const daysLeft = 90 - diffDays;
-                setNotification({
-                    type: "trial",
-                    daysLeft,
-                    message: `Your trial expires in ${daysLeft} day${daysLeft !== 1 ? "s" : ""}.`,
-                });
-            } else {
-                setNotification({ type: "expired", message: "Your Petroll pass has expired." });
-            }
-        }
-    }, [user]);
+    // useEffect(() => {
+    //     if (user?.createdAt) {
+    //         const createdDate = new Date(user.createdAt);
+    //         const diffDays = Math.floor((today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+    //         if (diffDays < 90) {
+    //             const daysLeft = 90 - diffDays;
+    //             setNotification({
+    //                 type: "trial",
+    //                 daysLeft,
+    //                 message: `Your trial expires in ${daysLeft} day${daysLeft !== 1 ? "s" : ""}.`,
+    //             });
+    //         } else {
+    //             setNotification({ type: "expired", message: "Your Petroll pass has expired." });
+    //         }
+    //     }
+    // }, [user]);
 
     const openMenu = () => setMenuVisible(true);
     const openQRCode = () => pet?.petId && setQrVisible(true);

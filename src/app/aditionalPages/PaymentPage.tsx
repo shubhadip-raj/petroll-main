@@ -118,10 +118,10 @@ export default function PaymentPage() {
 
     /* 📤 Send premium request */
     const handleRequestPremium = async () => {
-        if (!days) {
-            alert("Please enter number of days");
-            return;
-        }
+        // if (!days) {
+        //     alert("Please enter number of days");
+        //     return;
+        // }
 
         try {
             const response = await fetch(

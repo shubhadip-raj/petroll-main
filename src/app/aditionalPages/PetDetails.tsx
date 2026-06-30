@@ -74,33 +74,86 @@ export default function PetDetails() {
 
 
   // 🔥 Image picker (WEB)
-  const selectImage = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
+ const selectImage = () => {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
 
-    input.onchange = () => {
-      const file = input.files?.[0];
-      if (!file) return;
+  input.onchange = () => {
+    const file = input.files?.[0];
+    if (!file) return;
 
-      const reader = new FileReader();
+      // Validate image size
+  if (file.size > 5 * 1024 * 1024) {
+    alert("Image must be less than 5MB");
+    return;
+  }
 
-      reader.onload = () => {
-        const dataUrl = reader.result as string;
+    console.log(
+      "Original Size:",
+      (file.size / 1024 / 1024).toFixed(2),
+      "MB"
+    );
 
-        // ✅ For UI preview
-        setImagePreview(dataUrl);
+    const reader = new FileReader();
 
-        // ✅ For backend (strip prefix)
-        const base64 = dataUrl.split(",")[1];
-        setPet((p) => ({ ...p, base64Image: base64 }));
+    reader.onload = () => {
+      const img = new Image();
+
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        const MAX_WIDTH = 800;
+
+        let width = img.width;
+        let height = img.height;
+
+        if (width > MAX_WIDTH) {
+          height = (height * MAX_WIDTH) / width;
+          width = MAX_WIDTH;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        // Compress image
+        const compressedDataUrl = canvas.toDataURL(
+          "image/jpeg",
+          0.7
+        );
+
+        // Preview image
+        setImagePreview(compressedDataUrl);
+
+        // Extract base64
+        const base64 = compressedDataUrl.split(",")[1];
+
+        const compressedSize =
+          (base64.length * 3) / 4;
+
+        console.log(
+          "Compressed Size:",
+          (compressedSize / 1024).toFixed(0),
+          "KB"
+        );
+
+        setPet((prev) => ({
+          ...prev,
+          base64Image: base64,
+        }));
       };
 
-      reader.readAsDataURL(file);
+      img.src = reader.result as string;
     };
 
-    input.click();
+    reader.readAsDataURL(file);
   };
+
+  input.click();
+};
 
 
   // 🔥 Save pet
@@ -163,8 +216,10 @@ export default function PetDetails() {
       body: JSON.stringify({ ...pet, owner: user }),
     });
 
+    const data = await res.json();
+
     if (res.ok) {
-      alert(petId ? "Pet updated!" : "Pet created!");
+      alert(petId ? "Pet updated!" : `Pet created! ${data.petName}`);
       navigate(-1);
     } else {
       alert("Failed to save pet");
